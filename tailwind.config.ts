@@ -19,10 +19,10 @@ export default {
 			}
 		},
 		extend: {
-			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
-				display: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
-			},
+			// fontFamily: {
+			// 	sans: ['Inter', 'system-ui', 'sans-serif'],
+			// 	display: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+			// },
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

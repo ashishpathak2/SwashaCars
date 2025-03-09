@@ -8,7 +8,7 @@ import CarouselPage from "@/components/Video-carousel/CarouselPage";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black  ">
+    <div className="min-h-screen  bg-gradient-to-b  from-black via-slate-900 to-black">
       <Hero />
       <CarouselPage/>
       <CarServices />

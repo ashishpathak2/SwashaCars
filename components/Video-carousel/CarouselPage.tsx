@@ -10,7 +10,7 @@ import React from "react";
 
 const CarouselPage = () => {
   return (
-    <div className="w-full min-h-screen bg-black text-center flex-col items-center justify-center hidden md:block ">
+    <div className="w-full min-h-screen  text-center flex-col items-center justify-center hidden md:block ">
       {/* Responsive Heading */}
       <h2 className="text-3xl md:text-4xl font-bold mb-4  bg-gradient-to-r from-gray-100 to-indigo-400 bg-clip-text text-transparent">
         Our Work
@@ -18,7 +18,7 @@ const CarouselPage = () => {
       <p className="text-slate-300 mb-6 text-base">
         Showcasing our creative projects through captivating videos.
       </p>
-      {/* Carousel - Hidden on mobile, visible on md and up */}
+      {/* Carousel - Hidden on mobile, visible on md and up */}w
       <div className=" w-full ">
         <VideoCarousel videos={videos} />
       </div>

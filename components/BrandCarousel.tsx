@@ -26,7 +26,7 @@ const BrandCarousel = () => {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const scrollSpeed = 0.03; // Slightly slower for smoother animation
+  const scrollSpeed = 0.02; // Slightly slower for smoother animation
 
   // Memoize brand data to prevent unnecessary re-renders
   const brands = useMemo(() => [
@@ -127,7 +127,7 @@ const BrandCarousel = () => {
   return (
     <section 
       ref={carouselRef}
-      className={`py-16 bg-gradient-to-b from-slate-900 via-slate-800 to-black overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={` py-16 responsive-container  overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
     >
       <div className={`container mx-auto px-4 text-center mb-10 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-gray-100 to-indigo-400 bg-clip-text text-transparent">

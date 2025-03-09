@@ -6,6 +6,7 @@ import VideoFrame from "./VideoFrame";
 import PhoneNotch from "./PhoneNotch";
 import HomeIndicator from "./HomeIndicator";
 import PaginationDots from "./PaginationDots";
+import { motion } from "framer-motion";
 
 interface VideoItem {
   id: string;
@@ -250,7 +251,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
     <div
       ref={carouselRef}
       className={cn(
-        "relative w-full h-screen flex items-center justify-center overflow-hidden responsive-container",
+        "relative w-full h-screen flex items-center justify-center overflow-hidden ",
         "p-4 md:p-6 lg:p-8",
         className
       )}
@@ -390,10 +391,19 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
         onDotClick={(index) => setState((prev) => ({ ...prev, activeIndex: index }))}
       />
 
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-blue-500/15 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-teal-500/15 rounded-full filter blur-3xl"></div>
-      </div>
+      {/* Animated background elements */}
+      <motion.div 
+        className="absolute top-20 left-20 w-60 h-60 bg-blue-500/10 rounded-full filter blur-3xl"
+        initial={{ opacity: 0 }}
+        animate={state.isInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 1 }}
+      ></motion.div>
+      <motion.div 
+        className="absolute bottom-20 right-20 w-60 h-60 bg-teal-500/10 rounded-full filter blur-3xl"
+        initial={{ opacity: 0 }}
+        animate={state.isInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
+      ></motion.div>
     </div>
   );
 };

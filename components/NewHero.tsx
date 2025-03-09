@@ -76,7 +76,7 @@ export const NewHero = () => {
   };
 
   return (
-    <main className="text-white min-h-screen w-full overflow-hidden bg-gradient-to-b from-black to-black">
+    <main className="text-white min-h-screen w-full overflow-hidden ">
       <motion.div 
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 md:pb-20"
         initial="hidden"
