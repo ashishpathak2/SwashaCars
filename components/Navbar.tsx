@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import BrandLogo from "./BrandLogo";
+import OfferPopup from "./OfferPopup";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,14 +52,14 @@ const Navbar = () => {
   return (
     <header
       className={cn(
-        "sticky top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out text-white py-5",
-        isScrolled ? " bg-black/90 shadow-md" : "bg-black"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out text-white py-5",
+        isScrolled ? " bg-black/90 shadow-md" : "bg-transparent"
       )}
     >
       <div className="responsive-container">
         <div className="flex items-center justify-between">
           {/* Logo on the Left */}
-          <BrandLogo/>
+          <BrandLogo isScrolled={isScrolled}/>
 
           {/* Right Navigation (Services + Contact Us) */}
           <nav className="hidden md:flex items-center gap-8">
@@ -66,6 +67,7 @@ const Navbar = () => {
               <div key={item.label} className="relative">
                 {item.hasDropdown ? (
                   <div className="group inline-block">
+                    <OfferPopup/>
                     <span
                       className={cn(
                         "text-base font-semibold text-gray-300 hover:text-white transition-colors flex items-center cursor-pointer tracking-wide",

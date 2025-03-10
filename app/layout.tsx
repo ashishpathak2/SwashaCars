@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar"; 
-import Footer from "@/components/Footer";
 import { Fonts } from "@/components/Fonts";
-
+import CustomLayout from "@/components/CustomLayout"; // Import the client Layout
 
 export const metadata: Metadata = {
   title: "Swasha Cars",
@@ -12,17 +10,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body
-        className={`${Fonts.className}  antialiased scroll-smooth`}
-      >
-        <Navbar/>
-        {children}
-        <Footer/>
+      <body className={`${Fonts.className} bg-black antialiased scroll-smooth`}>
+        <CustomLayout>{children}</CustomLayout>
       </body>
     </html>
   );

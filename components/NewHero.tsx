@@ -87,8 +87,8 @@ export const NewHero = () => {
   };
 
   return (
-    <main className="text-white min-h-screen w-full overflow-hidden">
-      <div className="responsive-container relative mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 md:pb-20">
+    <main className="text-white min-h-screen w-full overflow-hidden ">
+      <div className="responsive-container relative mt-20 mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 md:pb-20">
         {/* Blur Element in the top left corner */}
         <motion.div 
           className="absolute top-0 left-0 w-64 h-64 md:w-80 md:h-80 rounded-full bg-blue-500/10 blur-3xl -translate-x-1/4 -translate-y-1/4 z-0"
@@ -205,7 +205,7 @@ export const NewHero = () => {
               whileHover="hover"
               whileTap={{ scale: 0.95 }}
             >
-              Book Now
+              Schedule Now
               {/* <GiCarWheel size={30} className="animate-spin" /> */}
 
             </motion.button>
