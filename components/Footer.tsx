@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import BrandLogo from "./BrandLogo";
 
 const Footer = () => {
   return (
@@ -10,23 +11,7 @@ const Footer = () => {
       <div className="responsive-container ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12 ">
           <div>
-            <Link href={"/"} className="flex items-center gap-2 mb-5">
-              <div className="h-8 w-8 flex items-center justify-center">
-                <Image
-                  src="/brand logo.jpg"
-                  alt="Brand Logo"
-                  width={32}
-                  height={32}
-                  className="rounded-[3px]"
-                />
-              </div>
-              <span className="font-display font-bold text-3xl tracking-tight text-white">
-                Swasha
-              </span>
-              <span className="font-display text-primary font-bold text-3xl tracking-tight">
-                Cars
-              </span>
-            </Link>
+           <BrandLogo isFooter={true}/>
             <p className="text-slate-400 mb-6">
               Transforming the way you buy pre-owned vehicles with quality,
               transparency, and exceptional service.

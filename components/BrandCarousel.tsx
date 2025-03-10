@@ -163,10 +163,10 @@ const BrandCarousel = () => {
                 key={`${brand.id}-${index}`}
                 onClick={() => handleBrandClick(brand.id)}
                 className={`
-                  w-24 h-16 md:w-36 md:h-24 
+                  w-24 h-16 md:w-20 md:h-20 
                   flex-shrink-0 flex items-center justify-center 
                   bg-gradient-to-br from-gray-800 to-gray-900 
-                  rounded-3xl shadow-lg hover:shadow-2xl 
+                  rounded-2xl shadow-lg hover:shadow-2xl 
                   transition-all duration-300 transform 
                   hover:scale-105 p-3 md:p-5 
                   border border-gray-700 hover:border-indigo-500 
@@ -194,7 +194,7 @@ const BrandCarousel = () => {
       </div>
       
       {/* Interactive pause/play indicator with animation */}
-      <div className={`flex justify-center mt-6 transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+      <div className={`flex justify-center mt-3 transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <button 
           onClick={() => setIsHovered(!isHovered)} 
           className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-300 transition-colors duration-300 group"

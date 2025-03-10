@@ -50,11 +50,11 @@ function ModernTestimonials () {
   }, []);
 
   return (
-    <div className="min-h-screen  text-white flex items-center justify-center p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="text-white flex items-center justify-center py-24">
+      <div className="responsive-container mx-auto">
         {/* Header */}
         <div className="text-center mb-12"> 
-          <h2 className="text-3xl md:text-4xl font-bold mb-4  bg-gradient-to-r from-gray-100 to-indigo-400 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-gray-100 to-indigo-400 bg-clip-text text-transparent">
             What Our Clients Say
           </h2>
           <p className="text-gray-400">
@@ -149,4 +149,4 @@ function ModernTestimonials () {
   );
 }
 
-export default ModernTestimonials ;
+export default ModernTestimonials;

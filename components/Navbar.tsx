@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import BrandLogo from "./BrandLogo";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,11 +58,7 @@ const Navbar = () => {
       <div className="responsive-container">
         <div className="flex items-center justify-between">
           {/* Logo on the Left */}
-          <Link href="/" className="flex items-center gap-2" aria-label="Swasha Garage Logo">
-            <Image src="/brand logo.jpg" alt="Brand Logo" width={40} height={40} className="rounded-[3px]" />
-            <span className="font-bold text-3xl text-white">Swasha</span>
-            <span className="text-primary font-bold text-3xl">Cars</span>
-          </Link>
+          <BrandLogo/>
 
           {/* Right Navigation (Services + Contact Us) */}
           <nav className="hidden md:flex items-center gap-8">
@@ -157,6 +153,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      
     </header>
   );
 };

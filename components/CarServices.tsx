@@ -341,7 +341,7 @@ const CarServices = () => {
         transition={{ duration: 1 }}
       ></motion.div>
       <motion.div 
-        className="absolute bottom-20 right-20 w-80 h-80 bg-teal-500/10 rounded-full filter blur-3xl"
+        className="absolute bottom-20 right-20 w-80 h-80 bg-blue-500/10 rounded-full filter blur-3xl"
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
