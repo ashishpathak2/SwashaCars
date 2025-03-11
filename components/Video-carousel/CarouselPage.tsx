@@ -1,9 +1,9 @@
 import VideoCarousel from "@/components/Video-carousel/VideoCarousel";
 
 const videos: { id: string; platform: "cloudinary"; title: string }[] = [
-  { id: "Untitled_design_lfptf1", platform: "cloudinary", title: "Video 1" },
-  { id: "Untitled_design_1_u2iafa", platform: "cloudinary", title: "Video 2" },
-  { id: "Untitled_design_1_qyhpbb", platform: "cloudinary", title: "Video 3" },
+  { id: "SwashaCars1_m6g9fo", platform: "cloudinary", title: "Video 1" },
+  { id: "SwashaCars2_v57bpf", platform: "cloudinary", title: "Video 2" },
+  { id: "SwashaCars3_b1uyqn", platform: "cloudinary", title: "Video 3" },
 ];
 
 import React from "react";
