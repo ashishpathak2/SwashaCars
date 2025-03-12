@@ -12,7 +12,7 @@ const center = {
 
 export default function SwashaGoogleMap() {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDY6z52v56uJGl-SuiHFZjQwF9n7eUM14w" // Use env variable
+    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "" // Use env variable
   });
 
   if (!isLoaded) return <div>Loading Map...</div>;
