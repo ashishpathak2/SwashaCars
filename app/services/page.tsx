@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Services from "@/components/Services";
 import FAQ from "@/components/FAQ";
 // import BrandCarousel from "@/components/BrandCarousel";
 import { 
@@ -146,8 +145,6 @@ export default function ServicesPage() {
       </section>
 
       <ServiceHighlights /> 
-      <Services />
-      {/* <BrandCarousel /> */}
       <ServiceProcess />
       <FAQ />
     </div>

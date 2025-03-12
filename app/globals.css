@@ -313,3 +313,19 @@
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+@keyframes preloader {
+  0% {
+    opacity: 1;
+  }
+  74% {  /* Roughly 2s out of 2.7s total duration */
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-preloader {
+  animation: preloader 2.7s ease-in-out forwards;
+}

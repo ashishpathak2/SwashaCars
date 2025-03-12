@@ -13,9 +13,15 @@ export default function CustomLayout({ children }: { children: React.ReactNode }
       {showPreloader ? (
         <Preloader onFinish={() => setShowPreloader(false)} />
       ) : (
-        <div className=" antialiased scroll-smooth">
-          <Navbar />
-          {children}
+        <div
+          className="antialiased scroll-smooth flex flex-col min-h-screen"
+          aria-live="polite"
+          aria-busy={showPreloader}
+        >
+          <header>
+            <Navbar />
+          </header>
+          <main className="flex-grow">{children}</main>
           <Footer />
         </div>
       )}

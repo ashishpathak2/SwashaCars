@@ -19,7 +19,7 @@ const CarouselPage = () => {
         Showcasing our creative projects through captivating videos.
       </p>
   
-      <div className=" w-full ">
+      <div className=" w-full responsive-container ">
         <VideoCarousel videos={videos} />
       </div>
       

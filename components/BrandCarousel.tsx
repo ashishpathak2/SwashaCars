@@ -170,7 +170,7 @@ const BrandCarousel = () => {
                   transition-all duration-300 transform 
                   hover:scale-105 p-3 md:p-5 
                   border border-gray-700 hover:border-indigo-500 
-                  group cursor-pointer
+                  group cursor-pointer focus:outline-none
                   ${selectedBrand === brand.id ? 'border-indigo-500 scale-105 shadow-lg shadow-indigo-900/20' : ''}
                   ${isVisible ? 'animate-fadeIn' : 'opacity-0'}
                 `}

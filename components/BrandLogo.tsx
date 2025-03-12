@@ -1,6 +1,7 @@
+"use client"; // If used in a client component; remove if in a server component
 import Image from "next/image";
 import Link from "next/link";
-import clsx from "clsx"; // Optional, for cleaner class handling
+import clsx from "clsx";
 
 interface BrandLogoProps {
   isFooter?: boolean;
@@ -11,8 +12,11 @@ const BrandLogo = ({ isFooter = false, isScrolled = false }: BrandLogoProps) => 
   return (
     <Link
       href="/"
-      className={clsx("flex items-center transition-all duration-300 ease-in-out", isFooter ? "gap-2 mb-2" : "gap-4")}
-      aria-label="Swasha Garage Logo"
+      className={clsx(
+        "flex items-center transition-all duration-300 ease-in-out ",
+        isFooter ? "gap-2 mb-2" : "gap-4"
+      )}
+      aria-label="Swasha Cars - Home"
     >
       {/* Logo Container */}
       <div
@@ -27,12 +31,13 @@ const BrandLogo = ({ isFooter = false, isScrolled = false }: BrandLogoProps) => 
       >
         <Image
           src="/Brand-logo.jpeg"
-          alt="Swasha Garage Logo"
+          alt="Swasha Cars Logo - Premium Car Services"
           width={100}
           height={100}
-          priority={!isFooter}
+          priority={!isFooter} // Priority for header, not footer
           sizes="(max-width: 768px) 40px, 56px"
           className="object-contain"
+          loading={isFooter ? "lazy" : "eager"} // Lazy load in footer
         />
       </div>
 
