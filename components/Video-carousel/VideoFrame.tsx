@@ -43,7 +43,7 @@ const VideoFrame = memo(
 
     const getVideoUrl = useCallback(() => {
       const baseUrl = `https://res.cloudinary.com/diftmnwxg/video/upload/q_auto,f_auto`;
-      const mobileParams = isMobile ? ",w_480,q_80" : "";
+      const mobileParams = isMobile ? ",w_480,q_100" : "";
       return `${baseUrl}${mobileParams}/${video.id}.mp4`;
     }, [video.id, isMobile]);
 

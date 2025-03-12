@@ -81,9 +81,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
   const toggleMute = useCallback(() => {
     setState((prev) => ({ ...prev, isMuted: !prev.isMuted }));
     const activeVideo = videoRefs.current[state.activeIndex];
-    if (activeVideo) {
-      activeVideo.muted = !activeVideo.muted;
-    }
+    if (activeVideo) activeVideo.muted = !activeVideo.muted;
   }, [state.activeIndex]);
 
   useEffect(() => {
@@ -102,14 +100,15 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
     };
 
     const handleResize = throttle(() => {
-      setState((prev) => ({ ...prev, isMobile: window.innerWidth < 768 }));
+      setState((prev) => ({
+        ...prev,
+        isMobile: window.innerWidth < 768,
+      }));
     }, 200);
 
     observerRef.current = new IntersectionObserver(
       ([entry]) => {
-        if (visibilityTimeoutRef.current) {
-          clearTimeout(visibilityTimeoutRef.current);
-        }
+        if (visibilityTimeoutRef.current) clearTimeout(visibilityTimeoutRef.current);
         visibilityTimeoutRef.current = setTimeout(() => {
           setState((prev) => ({ ...prev, isInView: entry.isIntersecting }));
         }, 150);
@@ -126,35 +125,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
       }
     };
 
-    const cachePosters = async () => {
-      if (state.isMobile && "caches" in window && navigator.onLine) {
-        try {
-          const cache = await caches.open("video-posters");
-          await Promise.all(
-            videos.map(async (video) => {
-              const posterUrl = `https://res.cloudinary.com/diftmnwxg/image/upload/q_auto,f_auto/${video.id}.jpg`;
-              try {
-                const response = await fetch(posterUrl, { mode: "no-cors" });
-                if (response.ok) {
-                  await cache.put(posterUrl, response);
-                } else {
-                  console.warn(`Failed to fetch poster: ${posterUrl}`);
-                }
-              } catch (err) {
-                console.error(`Cache failed for ${posterUrl}:`, err);
-              }
-            })
-          );
-        } catch (err) {
-          console.error("Failed to open cache:", err);
-        }
-      }
-    };
-
     handleResize();
     window.addEventListener("resize", handleResize);
     window.addEventListener("keydown", handleKeyDown);
-    cachePosters();
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -164,7 +137,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
         observerRef.current.unobserve(carouselRef.current);
       }
     };
-  }, [videos, state.isInView, state.isMobile, handlePrev, handleNext]);
+  }, [videos, state.isInView, handlePrev, handleNext]);
 
   const getCardStyles = useCallback(
     (index: number) => {
@@ -232,9 +205,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
           (isActive || isPrev || isNext) && "will-change-transform-opacity"
         ),
         style: {
-          width: state.isMobile ? "85vw" : frameWidth,
+          width: state.isMobile ? "80vw" : frameWidth, // Smaller width on mobile
           maxWidth: "22rem",
-          height: state.isMobile ? "75vh" : frameHeight,
+          height: state.isMobile ? "80vh" : frameHeight, // Smaller height on mobile
           maxHeight: "42rem",
           transform: `perspective(1200px) ${transform} scale(${scale})`,
           opacity,
@@ -251,8 +224,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
     <div
       ref={carouselRef}
       className={cn(
-        "relative w-full h-screen flex items-center justify-center overflow-hidden ",
-        "p-4 md:p-6 lg:p-8",
+        "relative w-full flex items-center justify-center overflow-hidden",
+        "py-6",
+        state.isMobile ? "" : "responsive-container h-screen",
         className
       )}
       onTouchStart={handleTouchStart}
@@ -260,9 +234,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
       onTouchEnd={handleTouchEnd}
     >
       {state.isMobile ? (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center mt-0">
           <div
-            className="relative w-4/5 h-3/4 max-w-xs rounded-3xl overflow-hidden border-4 border-gray-800 shadow-2xl"
+            className="relative w-[70vw] h-[70vh] rounded-3xl overflow-hidden border-4 border-gray-800 shadow-2xl" // Fixed size for mobile
             style={{ borderRadius: "2rem" }}
           >
             <div
@@ -313,7 +287,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
           </div>
         </div>
       ) : (
-        <div className="relative w-full max-w-6xl h-full flex items-center justify-center perspective">
+        <div className="relative w-full h-full flex items-center justify-center perspective ">
           {videos.map((video, index) => {
             const { className, style } = getCardStyles(index);
             return (
@@ -360,7 +334,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
       <button
         className={cn(
           "absolute top-1/2 transform -translate-y-1/2 z-30",
-          "left-2 md:left-8",
+          "left-2 md:left-4 lg:left-6", // Slightly closer on mobile
           "bg-white/10 hover:bg-white/20 backdrop-blur-sm",
           "p-2 md:p-3 rounded-full text-white shadow-lg",
           "transition-all duration-200 group"
@@ -374,7 +348,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
       <button
         className={cn(
           "absolute top-1/2 transform -translate-y-1/2 z-30",
-          "right-2 md:right-8",
+          "right-2 md:right-4 lg:right-6", // Slightly closer on mobile
           "bg-white/10 hover:bg-white/20 backdrop-blur-sm",
           "p-2 md:p-3 rounded-full text-white shadow-lg",
           "transition-all duration-200 group"
@@ -391,15 +365,14 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({
         onDotClick={(index) => setState((prev) => ({ ...prev, activeIndex: index }))}
       />
 
-      {/* Animated background elements */}
       <motion.div 
-        className="absolute top-20 left-20 w-60 h-60 bg-blue-500/10 rounded-full filter blur-3xl"
+        className="absolute top-0 left-0 w-60 h-60 bg-blue-500/10 rounded-full filter blur-3xl"
         initial={{ opacity: 0 }}
         animate={state.isInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1 }}
       ></motion.div>
       <motion.div 
-        className="absolute bottom-20 right-20 w-60 h-60 bg-teal-500/10 rounded-full filter blur-3xl"
+        className="absolute bottom-0 right-0 w-60 h-60 bg-teal-500/10 rounded-full filter blur-3xl"
         initial={{ opacity: 0 }}
         animate={state.isInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, delay: 0.3 }}

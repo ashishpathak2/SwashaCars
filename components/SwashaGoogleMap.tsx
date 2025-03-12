@@ -10,9 +10,11 @@ const center = {
   lng: 88.32600854548087
 };
 
+
+
 export default function SwashaGoogleMap() {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "" // Use env variable
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""   // Use env variable with default value
   });
 
   if (!isLoaded) return <div>Loading Map...</div>;

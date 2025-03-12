@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import {
   ChevronRight,
   FileText,
@@ -111,43 +111,92 @@ const categories = [
 
 const CarServices = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [isInView, setIsInView] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const controls = useAnimation();
 
+  // Optimized intersection observer setup
   useEffect(() => {
+    // Preload images for better performance
+    services.forEach(service => {
+      const img = new window.Image();
+      img.src = service.image;
+    });
+
+    // Define threshold based on screen size
+    const isMobile = window.innerWidth < 768;
+    const threshold = isMobile ? 0.05 : 0.15;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
+        if (entry.isIntersecting && !hasAnimated) {
+          controls.start("visible");
+          setHasAnimated(true);
           observer.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { 
+        threshold: threshold, // Use the defined threshold
+        rootMargin: "100px 0px -50px 0px" // Triggers 100px before entering viewport
+      }
     );
+    
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [controls, hasAnimated]);
 
+  // Optimized animation variants with mobile-specific timing
   const headerVariants = {
     hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.5, 
+        ease: "easeOut" 
+      } 
+    },
   };
 
   const categoryVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.3, ease: "easeOut" } },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.4, 
+        delay: 0.1, 
+        ease: "easeOut" 
+      } 
+    },
   };
 
+  // Improved card animation with responsive delay calculation
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: (index: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, delay: 0.1 * (index % 4) + 0.4, ease: "easeOut" },
-    }),
+    visible: (index: number) => {
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      const baseDelay = isMobile ? 0.03 : 0.1;
+      const columnCount = isMobile ? 1 : window.innerWidth < 1024 ? 2 : window.innerWidth < 1280 ? 3 : 4;
+      
+      const rowIndex = Math.floor(index / columnCount);
+      const colIndex = index % columnCount;
+      const delay = baseDelay * (rowIndex + colIndex) + 0.2;
+      
+      return {
+        opacity: 1,
+        y: 0,
+        transition: { 
+          duration: 0.3, 
+          delay: delay,
+          ease: "easeOut" 
+        },
+      };
+    },
   };
 
+  // Get filtered services based on category selection
   const filteredServices =
     selectedCategory === "all" ? services : services.filter((service) => service.category === selectedCategory);
 
@@ -155,28 +204,28 @@ const CarServices = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="py-12 md:py-20 relative overflow-hidden"
+      className="py-10 md:py-20 relative overflow-hidden"
       aria-labelledby="services-heading"
     >
       <div className="responsive-container min-h-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.header
-          className="max-w-3xl mx-auto text-center mb-8 md:mb-12"
+          className="max-w-3xl mx-auto text-center mb-6 md:mb-12"
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          animate={controls}
           variants={headerVariants}
         >
           <h2
             id="services-heading"
-            className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-gray-100 to-indigo-400 bg-clip-text text-transparent"
+            className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-gray-100 to-indigo-400 bg-clip-text text-transparent"
           >
             Comprehensive Car Services
           </h2>
-          <p className="text-slate-300 mb-6 text-base">
-            Explore our professional automotive services tailored to enhance your vehicle’s performance and appearance.
+          <p className="text-slate-300 mb-4 md:mb-6 text-sm md:text-base">
+            Explore our professional automotive services tailored to enhance your vehicle's performance and appearance.
           </p>
 
           <motion.nav
-            className="flex flex-wrap justify-center gap-2"
+            className="flex flex-wrap justify-center gap-1 md:gap-2"
             variants={categoryVariants}
             role="navigation"
             aria-label="Service Categories"
@@ -185,12 +234,12 @@ const CarServices = () => {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center bg-white/10 backdrop-blur-sm text-white hover:bg-white/20  ${
+                className={`px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 flex items-center bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 ${
                   selectedCategory === category.id ? "bg-indigo-500/20 text-indigo-300" : ""
                 }`}
                 aria-current={selectedCategory === category.id ? "true" : undefined}
               >
-                <span className="mr-1.5 opacity-70">{category.icon}</span>
+                <span className="mr-1 md:mr-1.5 opacity-70">{category.icon}</span>
                 {category.label}
               </button>
             ))}
@@ -198,32 +247,34 @@ const CarServices = () => {
         </motion.header>
 
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6"
           role="list"
           aria-label="Car Services List"
         >
           {filteredServices.map((service, index) => (
             <motion.article
               key={service.id}
-              className="group relative rounded-xl overflow-hidden transition-all duration-500 bg-white/5 backdrop-blur-sm hover:bg-white/10 border border-white/10 hover:border-white/20 flex flex-col h-full shadow-xl shadow-black/5"
+              className="group relative rounded-xl overflow-hidden transition-all duration-300 bg-white/5 backdrop-blur-sm hover:bg-white/10 border border-white/10 hover:border-white/20 flex flex-col h-full shadow-xl shadow-black/5"
               onMouseEnter={() => setHoveredCard(service.id)}
               onMouseLeave={() => setHoveredCard(null)}
               custom={index}
               initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
+              animate={controls}
               variants={cardVariants}
-              whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
               role="listitem"
+              style={{ willChange: "transform, opacity" }}
             >
-              <div className="h-36 overflow-hidden relative">
+              <div className="h-32 sm:h-36 overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
                 <Image
                   src={service.image}
                   alt={`${service.name} - Swasha Cars Service`}
                   width={200}
                   height={200}
-                  className="transition-transform object-cover w-full duration-700 ease-in-out group-hover:scale-110"
+                  className="transition-transform object-cover w-full h-full duration-700 ease-in-out group-hover:scale-110"
                   loading="lazy"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                 />
                 <motion.div
                   className="absolute top-3 left-3 bg-black/50 backdrop-blur-md p-1.5 rounded-full z-20"
@@ -234,22 +285,21 @@ const CarServices = () => {
               </div>
 
               <div className={`${roboto.className} p-3 flex flex-col flex-grow`}>
-                <h3 className="font-bold text-base text-white mb-1 group-hover:text-blue-400 transition-colors">
+                <h3 className="font-bold text-sm md:text-base text-white mb-1 group-hover:text-blue-400 transition-colors">
                   {service.name}
                 </h3>
                 <p className="text-xs text-slate-300 mb-2 line-clamp-2">{service.description}</p>
 
                 <ul className="flex flex-wrap gap-1 mb-2" aria-label={`Features of ${service.name}`}>
                   {service.features.slice(0, 3).map((feature, i) => (
-                    <motion.li
+                    <li
                       key={i}
                       className={`text-xs px-1.5 py-0.5 rounded-full transition-colors duration-300 ${
                         hoveredCard === service.id ? "bg-blue-500/20 text-blue-300" : "bg-white/10 text-slate-300"
                       }`}
-                      whileHover={{ scale: 1.1 }}
                     >
                       {feature}
-                    </motion.li>
+                    </li>
                   ))}
                   {service.features.length > 3 && (
                     <li className="text-xs px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300">
@@ -261,7 +311,7 @@ const CarServices = () => {
                 <div className="mt-auto pt-1">
                   <Link
                     href={`/services/${service.id}`}
-                    className="w-full py-2 rounded-full bg-gradient-to-r from-blue-500/80 to-teal-500/80 hover:from-blue-500 hover:to-teal-500 text-white text-xs font-medium flex items-center justify-center transition-all duration-300 shadow-lg shadow-blue-500/10 hover:shadow-blue-500/30 "
+                    className="w-full py-1.5 md:py-2 rounded-full bg-gradient-to-r from-blue-500/80 to-teal-500/80 hover:from-blue-500 hover:to-teal-500 text-white text-xs font-medium flex items-center justify-center transition-all duration-300 shadow-lg shadow-blue-500/10 hover:shadow-blue-500/30"
                     aria-label={`Explore ${service.name} service details`}
                   >
                     Explore Service
@@ -277,16 +327,18 @@ const CarServices = () => {
       </div>
 
       <motion.div
-        className="absolute top-20 left-20 w-64 h-64 bg-blue-500/10 rounded-full filter blur-3xl"
+        className="absolute top-10 md:top-20 left-10 md:left-20 w-40 md:w-64 h-40 md:h-64 bg-blue-500/10 rounded-full filter blur-3xl"
         initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1 }}
+        animate={hasAnimated ? { opacity: 0.8 } : { opacity: 0 }}
+        transition={{ duration: 0.8 }}
+        style={{ transform: "translateZ(0)" }}
       ></motion.div>
       <motion.div
-        className="absolute bottom-20 right-20 w-80 h-80 bg-blue-500/10 rounded-full filter blur-3xl"
+        className="absolute bottom-10 md:bottom-20 right-10 md:right-20 w-48 md:w-80 h-48 md:h-80 bg-blue-500/10 rounded-full filter blur-3xl"
         initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1, delay: 0.3 }}
+        animate={hasAnimated ? { opacity: 0.8 } : { opacity: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        style={{ transform: "translateZ(0)" }}
       ></motion.div>
     </section>
   );
