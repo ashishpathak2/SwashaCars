@@ -1,22 +1,24 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import BrandLogo from "./BrandLogo";
 import OfferPopup from "./OfferPopup";
+import { services } from "@/AppData/TypesOfService";
+import useIsMobile from "@/hooks/UseIsMobile"; 
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false); // State for Services dropdown
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const pathname = usePathname();
   const servicesButtonRef = useRef<HTMLButtonElement>(null);
   const servicesMenuRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile(); 
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -24,14 +26,9 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-    setIsServicesOpen(false); // Close Services dropdown on route change
+  React.useEffect(() => {
+    setIsServicesOpen(false);
   }, [pathname]);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   const toggleServicesMenu = () => {
     setIsServicesOpen((prev) => !prev);
@@ -43,11 +40,11 @@ const Navbar = () => {
       toggleServicesMenu();
     } else if (e.key === "Escape" && isServicesOpen) {
       setIsServicesOpen(false);
-      servicesButtonRef.current?.focus(); // Return focus to button
+      servicesButtonRef.current?.focus();
     } else if (e.key === "ArrowDown" && isServicesOpen) {
       e.preventDefault();
       const firstItem = servicesMenuRef.current?.querySelector("a");
-      firstItem?.focus(); // Focus first dropdown item
+      firstItem?.focus();
     }
   };
 
@@ -58,21 +55,19 @@ const Navbar = () => {
   ) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      const nextItem =
-        servicesMenuRef.current?.querySelectorAll("a")[index + 1];
+      const nextItem = servicesMenuRef.current?.querySelectorAll("a")[index + 1];
       nextItem?.focus();
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (index === 0) {
-        servicesButtonRef.current?.focus(); // Return to button
+        servicesButtonRef.current?.focus();
       } else {
-        const prevItem =
-          servicesMenuRef.current?.querySelectorAll("a")[index - 1];
+        const prevItem = servicesMenuRef.current?.querySelectorAll("a")[index - 1];
         prevItem?.focus();
       }
     } else if (e.key === "Escape") {
       setIsServicesOpen(false);
-      servicesButtonRef.current?.focus(); // Return focus to button
+      servicesButtonRef.current?.focus();
     }
   };
 
@@ -81,12 +76,11 @@ const Navbar = () => {
       label: "Services",
       path: "/services",
       hasDropdown: true,
-      dropdownItems: [
-        { label: "Maintenance & Repairs", path: "/services#maintenance" },
-        { label: "Documentation", path: "/services#documentation" },
-        { label: "Detailing", path: "/services#detailing" },
-        { label: "Dealership Services", path: "/services#dealership" },
-      ],
+      dropdownItems: services.map((s) => ({
+        id: s.id,
+        label: s.name,
+        path: `/services/${s.id}`,
+      })),
     },
     { label: "Contact Us", path: "/contacts" },
   ];
@@ -106,12 +100,11 @@ const Navbar = () => {
     >
       <div className="responsive-container">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <BrandLogo isScrolled={isScrolled} />
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Hidden on mobile */}
           <nav
-            className="hidden md:flex items-center gap-8"
+            className={cn("items-center gap-8", isMobile ? "hidden" : "flex")}
             aria-label="Primary Navigation"
           >
             {navItems.map((item) => (
@@ -121,7 +114,7 @@ const Navbar = () => {
                     <button
                       ref={servicesButtonRef}
                       className={cn(
-                        "text-base font-semibold text-gray-300 hover:text-white  transition-colors flex items-center cursor-pointer tracking-wide",
+                        "text-base font-semibold text-gray-300 hover:text-white transition-colors flex items-center cursor-pointer tracking-wide",
                         isActive(item.path) && "text-white"
                       )}
                       aria-haspopup="true"
@@ -130,15 +123,13 @@ const Navbar = () => {
                       onClick={toggleServicesMenu}
                       onKeyDown={handleKeyDown}
                       onMouseDown={(e) => e.preventDefault()}
-                      style={{ WebkitTapHighlightColor: 'transparent' }}
+                      style={{ WebkitTapHighlightColor: "transparent" }}
                     >
                       {item.label}
                       <ChevronDown
                         className={cn(
                           "ml-1 h-4 w-4 transition-transform duration-300",
-                          isServicesOpen
-                            ? "-rotate-180"
-                            : "group-hover:-rotate-180"
+                          isServicesOpen ? "-rotate-180" : "group-hover:-rotate-180"
                         )}
                         aria-hidden="true"
                       />
@@ -158,20 +149,16 @@ const Navbar = () => {
                       <div className="py-1">
                         {item.dropdownItems?.map((dropdownItem, index) => (
                           <Link
-                            key={dropdownItem.label}
+                            key={dropdownItem.id}
                             href={dropdownItem.path}
-                            className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white "
+                            className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white"
                             role="menuitem"
                             tabIndex={isServicesOpen ? 0 : -1}
                             onKeyDown={(e) =>
-                              handleMenuKeyDown(
-                                e,
-                                index,
-                                item.dropdownItems!.length
-                              )
+                              handleMenuKeyDown(e, index, item.dropdownItems!.length)
                             }
                             onMouseDown={(e) => e.preventDefault()}
-                            style={{ WebkitTapHighlightColor: 'transparent' }}
+                            style={{ WebkitTapHighlightColor: "transparent" }}
                           >
                             {dropdownItem.label}
                           </Link>
@@ -183,11 +170,11 @@ const Navbar = () => {
                   <Link
                     href={item.path}
                     className={cn(
-                      "text-base font-semibold text-gray-300 hover:text-white  transition-colors tracking-wide",
+                      "text-base font-semibold text-gray-300 hover:text-white transition-colors tracking-wide",
                       isActive(item.path) && "text-white"
                     )}
                     onMouseDown={(e) => e.preventDefault()}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    style={{ WebkitTapHighlightColor: "transparent" }}
                   >
                     {item.label}
                   </Link>
@@ -197,19 +184,17 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Shown only on mobile */}
           <button
-            onClick={toggleMobileMenu}
-            className="md:hidden p-2 text-white rounded-md "
-            aria-label={
-              isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"
-            }
-            aria-expanded={isMobileMenuOpen}
+            onClick={toggleServicesMenu} // Using toggleServicesMenu for mobile menu as well
+            className={cn("p-2 text-white rounded-md", isMobile ? "block" : "hidden")}
+            aria-label={isServicesOpen ? "Close mobile menu" : "Open mobile menu"}
+            aria-expanded={isServicesOpen}
             aria-controls="mobile-menu"
             onMouseDown={(e) => e.preventDefault()}
-            style={{ WebkitTapHighlightColor: 'transparent' }}
+            style={{ WebkitTapHighlightColor: "transparent" }}
           >
-            {isMobileMenuOpen ? (
+            {isServicesOpen ? (
               <X className="h-6 w-6" aria-hidden="true" />
             ) : (
               <Menu className="h-6 w-6" aria-hidden="true" />
@@ -217,12 +202,12 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Shown only on mobile when open */}
         <nav
           id="mobile-menu"
           className={cn(
-            "md:hidden transition-all duration-300",
-            isMobileMenuOpen ? "mt-4" : "hidden"
+            "transition-all duration-300",
+            isMobile && isServicesOpen ? "mt-4 block" : "hidden"
           )}
           aria-label="Mobile Navigation"
         >
@@ -232,34 +217,34 @@ const Navbar = () => {
                 {item.hasDropdown ? (
                   <>
                     <button
-                      className="flex items-center justify-between w-full text-base font-semibold text-white px-4 py-2 tracking-wide "
+                      className="flex items-center justify-between w-full text-base font-semibold text-white px-4 py-2 tracking-wide"
                       aria-haspopup="true"
-                      aria-expanded={isMobileMenuOpen}
-                      aria-controls={`mobile-dropdown-${item.label
-                        .toLowerCase()
-                        .replace(" ", "-")}`}
+                      aria-expanded={isServicesOpen}
+                      aria-controls={`mobile-dropdown-${item.label.toLowerCase().replace(" ", "-")}`}
+                      onClick={toggleServicesMenu}
                       onMouseDown={(e) => e.preventDefault()}
-                      style={{ WebkitTapHighlightColor: 'transparent' }}
+                      style={{ WebkitTapHighlightColor: "transparent" }}
                     >
                       {item.label}
                       <ChevronDown className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <div
-                      id={`mobile-dropdown-${item.label
-                        .toLowerCase()
-                        .replace(" ", "-")}`}
-                      className="overflow-hidden transition-all"
+                      id={`mobile-dropdown-${item.label.toLowerCase().replace(" ", "-")}`}
+                      className={cn(
+                        "transition-all duration-300 pl-4",
+                        isServicesOpen ? "block" : "hidden"
+                      )}
                       role="menu"
                       aria-label={`${item.label} Submenu`}
                     >
                       {item.dropdownItems?.map((dropdownItem) => (
                         <Link
-                          key={dropdownItem.label}
+                          key={dropdownItem.id}
                           href={dropdownItem.path}
-                          className="block pl-6 pr-4 py-2 text-sm text-gray-300 hover:text-white "
+                          className="block pl-2 pr-4 py-2 text-sm text-gray-300 hover:text-white"
                           role="menuitem"
                           onMouseDown={(e) => e.preventDefault()}
-                          style={{ WebkitTapHighlightColor: 'transparent' }}
+                          style={{ WebkitTapHighlightColor: "transparent" }}
                         >
                           {dropdownItem.label}
                         </Link>
@@ -269,9 +254,9 @@ const Navbar = () => {
                 ) : (
                   <Link
                     href={item.path}
-                    className="block text-base font-semibold text-white px-4 py-2 hover:text-primary  tracking-wide"
+                    className="block text-base font-semibold text-white px-4 py-2 hover:text-primary tracking-wide"
                     onMouseDown={(e) => e.preventDefault()}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    style={{ WebkitTapHighlightColor: "transparent" }}
                   >
                     {item.label}
                   </Link>

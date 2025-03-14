@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Link from "next/link";
 
 // Offer Data
 const offerData = {
@@ -33,7 +34,7 @@ const offerData = {
     "Complimentary Car Perfume",
     "50% Off on Wheel Alignment",
   ],
-  ctaText: "Book Now & Save 20%",
+  ctaText: "Schedule Now",
   offerImage: "/offerImage.jpg",
   displayDuration: 8000, // Time before popup appears (in ms)
 };
@@ -60,6 +61,7 @@ function OfferPopup() {
                 alt={`${offerData.festivalName} Offer`}
                 fill
                 className="object-cover object-top"
+                priority
               />
             </div>
 
@@ -128,9 +130,9 @@ function OfferPopup() {
                 >
                   Remind Later
                 </button>
-                <button className="w-full py-2 px-4 bg-primary rounded-md text-white text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity">
+                <Link href={"/contacts"} onClick={() => setOpen(false)} className="w-full text-center py-2 px-4 bg-primary rounded-md text-white text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity">
                   {offerData.ctaText}
-                </button>
+                </Link>
               </div>
             </div>
           </div>

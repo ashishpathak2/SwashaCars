@@ -1,7 +1,7 @@
-import Hero from "@/components/Hero";
+import Hero from "@/components/HeroSection/Hero";
 import CarServices from "../components/CarServices";
-import BrandCarousel from "@/components/BrandCarousel";
-import Testimonials from "../components/Testimonials";
+// import BrandCarousel from "@/components/BrandCarousel";
+// import Testimonials from "../components/Testimonials";
 import CarouselPage from "@/components/Video-carousel/CarouselPage";
 
 export default function Home() {
@@ -10,8 +10,8 @@ export default function Home() {
       <Hero />
       <CarouselPage/>
       <CarServices  />
-      <BrandCarousel />
-      <Testimonials />
+      {/* <BrandCarousel /> */}
+      {/* <Testimonials /> */}
     </div>
   );
 }

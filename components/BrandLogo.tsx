@@ -30,7 +30,7 @@ const BrandLogo = ({ isFooter = false, isScrolled = false }: BrandLogoProps) => 
         )}
       >
         <Image
-          src="/Brand-logo.jpeg"
+          src="/Brand-logo.jpg"
           alt="Swasha Cars Logo - Premium Car Services"
           width={100}
           height={100}

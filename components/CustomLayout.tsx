@@ -1,7 +1,7 @@
-"use client";
+// "use client";
 
-import { useState } from "react";
-import Preloader from "@/components/Preloader";
+// import { useState } from "react";
+// import Preloader from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
